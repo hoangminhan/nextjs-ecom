@@ -7,12 +7,18 @@ import {
   GetStaticProps,
   GetStaticPropsContext,
 } from "next";
+import { useEffect } from "react";
 interface HomePageProps {
   listProduct: [];
 }
 const HomePage = (props: HomePageProps) => {
   const { listProduct } = props;
   console.log("clg", listProduct);
+  // useEffect(() => {
+  //   (async () => {
+  //     await productApi.getListProduct({ limit: 8 });
+  //   })();
+  // });
   return <div>HomePage</div>;
 };
 
@@ -35,7 +41,7 @@ export default HomePage;
 // dev => always when request. Prod=> run khi build
 export const getStaticProps = async (context: GetStaticPropsContext) => {
   const { product } = await productApi.getListProduct({ limit: 8 });
-  console.log("run");
+
   return {
     props: {
       listProduct:

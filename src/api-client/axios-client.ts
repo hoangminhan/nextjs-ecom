@@ -1,9 +1,14 @@
 import axios from "axios";
-import queryString from "query-string"
+import getConfig from "next/config";
 
+const { publicRuntimeConfig } = getConfig();
+
+const hasWindow = () => typeof window === "object";
+console.log({publicRuntimeConfig})
 const axiosClient = axios.create({
-  // baseURL:"https://www.kaitoshop.tk/api/"
-  baseURL: process.env.API_URL,
+  // baseURL:"https://www.kaitoshop.tk/api/",
+  // baseURL:"/api",
+  baseURL: hasWindow() ? "/api/" : publicRuntimeConfig.API_URL + "/api/",
   // timeout: 10000,
   headers: {
     "Content-Type": "application/json",

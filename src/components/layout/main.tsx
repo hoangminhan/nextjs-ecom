@@ -14,14 +14,8 @@ export function MainLayout(props: LayoutProps) {
       <HeaderApp />
 
       <div className="grow-[1]">
-        <Link href="/blog" legacyBehavior>
-          <a>Blog</a>
-        </Link>
         <Link href="/" passHref>
           <p>Home</p>
-        </Link>
-        <Link href="/work" passHref>
-          <p>Work</p>
         </Link>
         {children}
       </div>

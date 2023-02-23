@@ -10,6 +10,7 @@ export const config = {
   };
 
 export default function handler(req: NextApiRequest, res: NextApiResponse<any>) {
+  console.log("run proxy")
   return new Promise((resolve) => {
     const cookies = new Cookies(req, res);
     const accessToken = cookies.get("accessToken");
@@ -20,6 +21,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse<any>) 
     }
     proxy.web(req, res, {
       target: process.env.API_URL,
+      // target: "https://www.kaitoshop.tk",
       /* A flag that tells the proxy to not handle the response. */
       selfHandleResponse: false,
       /* Telling the proxy to change the origin of the request to the target. */

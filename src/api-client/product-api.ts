@@ -3,7 +3,8 @@ import axiosClient from "./axios-client"
 
 export const productApi = {
     getListProduct(params:paramsUrl):Promise<ListResponse<shoeProperties>>{
-        const url ="products/get-product"
+        console.log("get")
+        const url ="/products/get-product"
         return axiosClient.get(url,{params})
     }
 }
