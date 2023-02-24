@@ -37,8 +37,9 @@ export interface paramsUrl {
 
 }
 export interface ListResponse<T> {
-  product: T[];
-  status:number
+  product?: T[];
+  data:T[];
+  status?:number
   start:number
   end:number
   limit:number

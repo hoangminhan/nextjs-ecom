@@ -1,5 +1,4 @@
 import * as React from "react";
-import { Menu } from "../menu";
 
 export interface IFooterAppProps {}
 

@@ -1,6 +1,6 @@
 import "@/styles/globals.scss";
 import "tailwindcss/tailwind.css";
-import "antd/dist/reset.css";
+// import "antd/dist/reset.css";
 import type { AppProps } from "next/app";
 import { AppPropsWithLayout, NextPageWithLayout } from "@/types";
 import { EmptyLayout } from "@/components/layout/empty-layout";

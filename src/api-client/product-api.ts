@@ -6,5 +6,9 @@ export const productApi = {
         console.log("get")
         const url ="/products/get-product"
         return axiosClient.get(url,{params})
-    }
+    },
+    getProductsType: (params:paramsUrl):Promise<ListResponse<shoeProperties>> => {
+        const url = "/products/type";
+        return axiosClient.get(url, { params });
+    },
 }

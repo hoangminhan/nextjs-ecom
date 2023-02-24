@@ -13,12 +13,7 @@ export function MainLayout(props: LayoutProps) {
     <div className="min-h-[100vh] flex flex-col px-4">
       <HeaderApp />
 
-      <div className="grow-[1]">
-        <Link href="/" passHref>
-          <p>Home</p>
-        </Link>
-        {children}
-      </div>
+      <div className="grow-[1] mt-[70px]">{children}</div>
       <FooterApp />
     </div>
   );
