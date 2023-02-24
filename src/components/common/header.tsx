@@ -2,7 +2,6 @@ import { commonApi } from "@/api-client";
 import { imageApp } from "@/assets/images";
 import Image from "next/image";
 import React, { useEffect } from "react";
-import NoSSR from "react-no-ssr";
 import { MenuHeader } from "../menu";
 
 export interface IHeaderAppProps {}
