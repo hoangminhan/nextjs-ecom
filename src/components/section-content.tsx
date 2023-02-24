@@ -1,7 +1,6 @@
 import { shoeProperties } from "@/types";
 import Image from "next/image";
 import * as React from "react";
-import { NumericFormat } from "react-number-format";
 
 export interface SectionContentProps {
   data: shoeProperties[];
