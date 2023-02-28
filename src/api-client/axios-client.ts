@@ -4,7 +4,6 @@ import getConfig from "next/config";
 const { publicRuntimeConfig } = getConfig();
 
 const hasWindow = () => typeof window === "object";
-console.log({publicRuntimeConfig})
 const axiosClient = axios.create({
   // baseURL:"https://www.kaitoshop.tk/api/",
   // baseURL:"/api",
