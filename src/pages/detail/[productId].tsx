@@ -11,6 +11,9 @@ import Image from "next/image";
 import { useRouter } from "next/router";
 import * as React from "react";
 import { CheckCircleTwoTone } from "@ant-design/icons";
+import Head from "next/head";
+import { Breadcrumb } from "antd";
+import Link from "next/link";
 
 export interface DetailProductProps {
   productInfo: shoeProperties;
@@ -21,6 +24,7 @@ export default function DetailProduct(props: DetailProductProps) {
   const [currentShoe, setCurrentShoe] = React.useState<string>("");
   const [currentSize, setCurrentSize] = React.useState<number>();
   const router = useRouter();
+  console.log({ productInfo });
 
   React.useEffect(() => {
     if (Object.keys(productInfo || {}).length && currentShoe === "") {
@@ -33,11 +37,31 @@ export default function DetailProduct(props: DetailProductProps) {
   }
   return (
     <div className="mt-8 max-w-[1200px] mx-auto">
+      <Head>
+        <title>{productInfo.name}</title>
+      </Head>
+      <div className="mb-3">
+        <Breadcrumb>
+          <Breadcrumb.Item>
+            <Link href={"/"} legacyBehavior>
+              <a>Home</a>
+            </Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Link href={`/product/${productInfo.NSX.replace(" ", "-")}`}>
+              {productInfo.key}
+            </Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <p className="capitalize">{productInfo.name}</p>
+          </Breadcrumb.Item>
+        </Breadcrumb>
+      </div>
       <div className="shadow-card rounded-[0.5rem] flex gap-3 p-5 lg:flex-row">
         {/* info product */}
         <div className="flex-1 flex flex-col">
           <div className="">
-            <h3>Thông tin sản phẩm</h3>
+            <h3 className="mb-3">Thông tin sản phẩm</h3>
             <p>
               Tên sản phẩm: <span>{productInfo.name}</span>
             </p>
@@ -52,7 +76,7 @@ export default function DetailProduct(props: DetailProductProps) {
             </p>
           </div>
           {/* des product */}
-          <div>
+          <div className="mt-4">
             <h3>Mô tả sản phẩm</h3>
             <p>
               {productInfo.description.replace("<p>", "").replace("</p>", "")}
@@ -61,7 +85,11 @@ export default function DetailProduct(props: DetailProductProps) {
         </div>
         {/* detail product */}
         <div className="flex-1">
-          <h2 className="text-center">{productInfo.name}</h2>
+          <div className="text-center capitalize flex justify-center">
+            <h2 className="w-fit bg-primaryColor text-[#f3eeee] px-3 py-1 rounded-lg">
+              {productInfo.name}
+            </h2>
+          </div>
           <div className="mt-4 flex justify-center gap-6 items-center">
             {/* type */}
             <div className="flex flex-col gap-2">
