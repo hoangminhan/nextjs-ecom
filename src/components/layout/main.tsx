@@ -4,10 +4,6 @@ import React, { useEffect } from "react";
 import { FooterApp, HeaderApp } from "../common";
 
 export function MainLayout(props: LayoutProps) {
-  useEffect(() => {
-    console.log("mounting");
-    return () => console.log("unmounting");
-  }, []);
   const { children } = props;
   return (
     <div className="min-h-[100vh] flex flex-col px-4">

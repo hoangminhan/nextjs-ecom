@@ -24,7 +24,7 @@ export function HeaderApp(props: IHeaderAppProps) {
               <input
                 type="search"
                 id="default-search"
-                className="block w-full p-4 py-2 pl-10 text-sm text-gray-900 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 "
+                className="block w-full p-4 py-2 pl-10 text-sm outline-none border-none rounded-2xl bg-[#dcdada]"
                 placeholder="Search"
                 required
               />

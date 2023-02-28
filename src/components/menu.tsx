@@ -67,7 +67,6 @@ export function MenuHeader() {
   const menuList: propertiesMenu[] = handleGetItemMenu(data);
   const items: MenuProps["items"] = menuList;
   const onClick: MenuProps["onClick"] = (e) => {
-    console.log("click ", e);
     setCurrentItemMenu(e.key);
     if (e.key === "Home") {
       router.push(`/`);

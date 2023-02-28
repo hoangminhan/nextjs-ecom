@@ -8,15 +8,15 @@ import {
   GetStaticProps,
   GetStaticPropsContext,
 } from "next";
+import Head from "next/head";
 import { useEffect } from "react";
 interface HomePageProps {
   listProduct: shoeProperties[];
   productType: shoeProperties[];
+  productListForYou: shoeProperties[];
 }
 const HomePage = (props: HomePageProps) => {
-  const { listProduct, productType } = props;
-  console.log("clg", listProduct);
-  console.log("clgType", productType);
+  const { listProduct, productType, productListForYou } = props;
   // useEffect(() => {
   //   (async () => {
   //     await productApi.getListProduct({ limit: 8 });
@@ -24,7 +24,16 @@ const HomePage = (props: HomePageProps) => {
   // });
   return (
     <div className="pt-8 max-w-[1200px] my-0 mx-auto">
+      <Head>
+        <title>HAShoes</title>
+      </Head>
       <SectionContent data={productType} title="Dành riêng cho bạn" />
+      <div className="mt-8">
+        <SectionContent data={listProduct} title="Mới nhất" />
+      </div>
+      <div className="mt-8">
+        <SectionContent data={productListForYou} title="Dành cho bạn" />
+      </div>
     </div>
   );
 };
@@ -67,11 +76,19 @@ export const getStaticProps = async (context: GetStaticPropsContext) => {
     page: 1,
     sort_price: 0,
   });
-  // console.log({ product_type });
+  const { data: productForYou } = await productApi.getProductsType({
+    items: 8,
+    name: "converse",
+    page: 1,
+    sort_price: 0,
+  });
   return {
     props: {
       listProduct: Array.isArray(product) ? handleGetdata(product) : [],
       productType: Array.isArray(data) ? handleGetdata(data) : [],
+      productListForYou: Array.isArray(productForYou)
+        ? handleGetdata(productForYou)
+        : [],
     },
   };
 };

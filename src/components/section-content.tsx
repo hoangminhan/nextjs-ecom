@@ -1,7 +1,8 @@
 import { shoeProperties } from "@/types";
 import Image from "next/image";
 import * as React from "react";
-import { NumericFormat } from "react-number-format";
+import { StarFilled, CheckCircleTwoTone } from "@ant-design/icons";
+import Link from "next/link";
 
 export interface SectionContentProps {
   data: shoeProperties[];
@@ -18,55 +19,79 @@ export function SectionContent(props: SectionContentProps) {
         </p>
       </div>
       {/* body */}
-      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4">
+      <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 cursor-pointer">
         {data.map((item, index) => {
           return (
             <div
               key={index}
-              className="rounded border border-solid border-[#e8dfec] p-4"
+              className="rounded-md border border-solid border-[#e8dfec] p-4"
+              data-aos="zoom-in"
             >
-              <p className="flex gap-1 text-[0.9rem] text-slate-500">
-                {item.rating}
-              </p>
-              <p className="mb-2 truncate text-[1.1rem] font-semibold capitalize text-slate-800">
-                {item.name}
-              </p>
-              <div>
-                <Image
-                  src={item.poster[0].url}
-                  alt=""
-                  width={250}
-                  height={250}
-                />
-              </div>
-              {/* price */}
-              <div className="flex items-center justify-between mt-2">
-                <div className="flex flex-col gap-1 text-[1.2rem] font-semibold text-[#ec1839]">
-                  <p className="text-[0.85rem] text-slate-500">Giá bán</p>
-                  <p>
-                    {new Intl.NumberFormat("vi-VN", {
-                      style: "currency",
-                      currency: "VND",
-                      minimumFractionDigits: 2,
-                    }).format(item.price)}
+              <Link href={`/detail/${item._id}`}>
+                <div className="flex gap-1 text-[0.9rem] text-slate-500">
+                  <p className="flex gap items-center mb-1">
+                    <StarFilled
+                      style={{ color: "#b5b51d", marginRight: "2px" }}
+                    />
+                    {item.rating > 5 ? 5 : item.rating}
+                    <span>/5</span>
                   </p>
                 </div>
-                <div className="flex justify-end">
-                  {item.poster.slice(0, 2).map((shoe, index) => {
-                    return (
-                      <div key={index}>
-                        <Image
-                          src={shoe.url}
-                          alt=""
-                          width={40}
-                          height={40}
-                          className="flex rounded border border-[#e8dfec]"
-                        />
-                      </div>
-                    );
-                  })}
+                <p className="mb-2 truncate text-[1.1rem] font-semibold capitalize text-slate-800">
+                  {item.name}
+                </p>
+                <div className="group w-[250px] h-[250px] [perspective:1000px]">
+                  <div className="relative transition-all duration-500 [transform-style:preserve-3d] group-hover:[transform:rotateY(180deg)]">
+                    <div className="absolute w-[250px] h-[250px] inset-0">
+                      <Image
+                        src={item.poster[0].url}
+                        alt=""
+                        fill
+                        object-fit="contain"
+                      />
+                    </div>
+                    <div className="absolute w-[250px] h-[250px] inset-0 [transform:rotateY(180deg)] [backface-visibility:hidden]">
+                      <Image
+                        src={item.poster[1].url}
+                        alt=""
+                        fill
+                        object-fit="contain"
+                      />
+                    </div>
+                  </div>
                 </div>
-              </div>
+
+                {/* price */}
+                <div className="flex items-center justify-between mt-2">
+                  <div className="flex flex-col gap-1 text-[1.2rem] font-semibold text-[#ec1839]">
+                    <p className="text-[0.85rem] text-slate-500">Giá bán</p>
+                    <p>
+                      {new Intl.NumberFormat("vi-VN", {
+                        style: "currency",
+                        currency: "VND",
+                        minimumFractionDigits: 2,
+                      }).format(item.price)}
+                    </p>
+                  </div>
+                  <div className="flex justify-end gap-1">
+                    {item.poster.slice(0, 2).map((shoe, index) => {
+                      return (
+                        <div
+                          key={shoe.id}
+                          className="border-solid border-[1px] border-[#e8dfec] rounded-sm cursor-pointer relative w-10 h-10"
+                        >
+                          <Image
+                            src={item.poster[index].url}
+                            alt=""
+                            fill
+                            object-fit="contain"
+                          />
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
+              </Link>
             </div>
           );
         })}
