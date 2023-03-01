@@ -10,28 +10,31 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/router";
 import * as React from "react";
-import { CheckCircleTwoTone } from "@ant-design/icons";
+import { CheckCircleTwoTone, StarFilled } from "@ant-design/icons";
 import Head from "next/head";
 import { Breadcrumb } from "antd";
 import Link from "next/link";
+import { SuggestProduct } from "@/components";
 
 export interface DetailProductProps {
   productInfo: shoeProperties;
+  dataSuggest: shoeProperties[];
 }
 
 export default function DetailProduct(props: DetailProductProps) {
-  const { productInfo } = props;
+  const { productInfo, dataSuggest } = props;
   const [currentShoe, setCurrentShoe] = React.useState<string>("");
   const [currentSize, setCurrentSize] = React.useState<number>();
   const router = useRouter();
-  console.log({ productInfo });
+  const createMarkup = () => {
+    return { __html: productInfo.description };
+  };
 
   React.useEffect(() => {
-    if (Object.keys(productInfo || {}).length && currentShoe === "") {
+    if (Object.keys(productInfo || {}).length) {
       setCurrentShoe(productInfo.poster[0].url);
-      // setCurrentSize(productInfo.size[0]);
     }
-  }, [productInfo]);
+  }, [productInfo, router.query.productId]);
   if (router.isFallback) {
     return <div>Loading....</div>;
   }
@@ -48,8 +51,11 @@ export default function DetailProduct(props: DetailProductProps) {
             </Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
-            <Link href={`/product/${productInfo.NSX.replace(" ", "-")}`}>
-              {productInfo.key}
+            <Link
+              href={`/product/${productInfo.NSX.replace(" ", "-")}`}
+              passHref
+            >
+              <p className="capitalize">{productInfo.key}</p>
             </Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
@@ -78,9 +84,10 @@ export default function DetailProduct(props: DetailProductProps) {
           {/* des product */}
           <div className="mt-4">
             <h3>Mô tả sản phẩm</h3>
-            <p>
+            {/* <p>
               {productInfo.description.replace("<p>", "").replace("</p>", "")}
-            </p>
+            </p> */}
+            <div dangerouslySetInnerHTML={createMarkup()} />
           </div>
         </div>
         {/* detail product */}
@@ -122,8 +129,14 @@ export default function DetailProduct(props: DetailProductProps) {
             </div>
             {/*  */}
             <div>
-              <div className="relative h-[320px] w-[320px]">
-                <Image src={currentShoe} alt="" fill object-fit="contain" />
+              <div className="relative h-[320px] w-[320px] overflow-hidden">
+                <Image
+                  src={currentShoe}
+                  alt=""
+                  fill
+                  object-fit="contain"
+                  className="hover:scale-110 duration-150 ease-linear"
+                />
               </div>
               <div className="flex justify-between items-center mt-4">
                 <p>
@@ -139,6 +152,40 @@ export default function DetailProduct(props: DetailProductProps) {
                 <div>
                   <p className="px-3 py-2 bg-[#ccc] rounded-md cursor-pointer">
                     Add to card
+                  </p>
+                </div>
+              </div>
+
+              {/* quanlity rate, comment */}
+              <div className="flex justify-center gap-4 mt-4 text-[16px] text-slate-600">
+                {/* Evaluate */}
+                <div>
+                  {productInfo.numReviews ? (
+                    <p>
+                      {productInfo.numReviews} <span>đánh giá</span>
+                    </p>
+                  ) : (
+                    <p>Chưa có đánh giá</p>
+                  )}
+                </div>
+                <div>
+                  {productInfo.numReviews ? (
+                    <p className="flex items-center gap-1">
+                      <span className="mr-2">|</span>
+                      {productInfo.numReviews - 4} <span>phản hồi</span>
+                    </p>
+                  ) : (
+                    <p>Chưa có phản hồi</p>
+                  )}
+                </div>
+                <div>
+                  <p className="flex items-center gap-1">
+                    <span className="mr-2">|</span>
+                    <StarFilled
+                      style={{ color: "#b5b51d", marginRight: "2px" }}
+                    />
+                    {productInfo.rating < 5 ? productInfo.rating : 5}{" "}
+                    <span>/5</span>
                   </p>
                 </div>
               </div>
@@ -171,6 +218,8 @@ export default function DetailProduct(props: DetailProductProps) {
           </div>
         </div>
       </div>
+      {/* recomment product */}
+      <SuggestProduct dataSuggest={dataSuggest} />
     </div>
   );
 }
@@ -192,13 +241,18 @@ export const getStaticProps: GetStaticProps = async (
   context: GetStaticPropsContext
 ) => {
   const idDetail = context.params?.productId;
-  let result;
-  if (idDetail) {
-    result = await productApi.getProductById(`${idDetail}`);
-  }
+  const { product } = await productApi.getProductById(`${idDetail}`);
+  const { data } = await productApi.getProductsType({
+    limit: 10,
+    name: product?.key,
+    page: 1,
+    sort_price: 0,
+  });
   return {
     props: {
-      productInfo: result?.product ? result?.product : {},
+      productInfo: product ? product : {},
+      dataSuggest: data,
     },
+    revalidate: 60 * 5,
   };
 };
