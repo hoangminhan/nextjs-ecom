@@ -10,11 +10,13 @@ export interface SectionContentProps {
   data: shoeProperties[];
   title: string;
   isFillter?: boolean;
+  currentPage?: number;
 }
 
 export function SectionContent(props: SectionContentProps) {
-  const { data, title, isFillter } = props;
+  const { data, title, isFillter, currentPage } = props;
   const router = useRouter();
+  console.log({ router });
   return (
     <div className="shadow-card rounded-[0.5rem] p-5">
       <div className="mb-5 flex items-center justify-between">
@@ -26,17 +28,27 @@ export function SectionContent(props: SectionContentProps) {
             {/* <p className="cursor-pointer">Tăng</p>
             <p className="cursor-pointer">Giảm</p> */}
             {filterPrice.map((item, index) => {
+              console.log(Object.keys(router.query).includes("_sort_price"));
+              console.log("...", item.value === "0");
               return (
                 <p
                   key={item.value}
-                  className="cursor-pointer"
+                  className={`cursor-pointer px-2 py-1 rounded-lg hover:bg-primaryColor hover:text-white duration-200 ease-in-out ${
+                    item.value == router?.query._sort_price ||
+                    (!Object.keys(router.query).includes("_sort_price") &&
+                      item.value === "0")
+                      ? "bg-primaryColor text-white"
+                      : "bg-transparent text-black"
+                  }
+                
+                  `}
                   onClick={() => {
                     router.push({
-                      pathname: "/product/[type]",
+                      // pathname: "/product/[type]",
                       query: {
-                        // _page: page,
+                        _page: currentPage,
                         _sort_price: item.value,
-                        type: title,
+                        type: title.replaceAll(" ", "-"),
                       },
                     });
                   }}
