@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { ScrollToTop } from "@/components";
-
+import NextNProgress from "nextjs-progressbar";
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   // const getLayout = Component.getLayout ?? ((page) => page);
   // return getLayout(<Component {...pageProps} />);
@@ -35,7 +35,8 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
     >
       <Layout>
         <Component {...pageProps} />
-        {/* <ScrollToTop /> */}
+        <ScrollToTop />
+        <NextNProgress />
       </Layout>
     </SWRConfig>
   );
