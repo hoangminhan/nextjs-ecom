@@ -10,34 +10,64 @@ import {
 import Image from "next/image";
 import { useRouter } from "next/router";
 import * as React from "react";
-import { CheckCircleTwoTone } from "@ant-design/icons";
+import { CheckCircleTwoTone, StarFilled } from "@ant-design/icons";
+import Head from "next/head";
+import { Breadcrumb } from "antd";
+import Link from "next/link";
+import { SuggestProduct } from "@/components";
 
 export interface DetailProductProps {
   productInfo: shoeProperties;
+  dataSuggest: shoeProperties[];
 }
 
 export default function DetailProduct(props: DetailProductProps) {
-  const { productInfo } = props;
+  const { productInfo, dataSuggest } = props;
   const [currentShoe, setCurrentShoe] = React.useState<string>("");
   const [currentSize, setCurrentSize] = React.useState<number>();
   const router = useRouter();
+  const createMarkup = () => {
+    return { __html: productInfo.description };
+  };
 
   React.useEffect(() => {
-    if (Object.keys(productInfo || {}).length && currentShoe === "") {
+    if (Object.keys(productInfo || {}).length) {
       setCurrentShoe(productInfo.poster[0].url);
-      // setCurrentSize(productInfo.size[0]);
     }
-  }, [productInfo]);
+  }, [productInfo, router.query.productId]);
   if (router.isFallback) {
     return <div>Loading....</div>;
   }
   return (
     <div className="mt-8 max-w-[1200px] mx-auto">
+      <Head>
+        <title>{productInfo.name}</title>
+      </Head>
+      <div className="mb-3">
+        <Breadcrumb>
+          <Breadcrumb.Item>
+            <Link href={"/"} legacyBehavior>
+              <a>Home</a>
+            </Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <Link
+              href={`/product/${productInfo.NSX.replace(" ", "-")}`}
+              passHref
+            >
+              <p className="capitalize">{productInfo.key}</p>
+            </Link>
+          </Breadcrumb.Item>
+          <Breadcrumb.Item>
+            <p className="capitalize">{productInfo.name}</p>
+          </Breadcrumb.Item>
+        </Breadcrumb>
+      </div>
       <div className="shadow-card rounded-[0.5rem] flex gap-3 p-5 lg:flex-row">
         {/* info product */}
         <div className="flex-1 flex flex-col">
           <div className="">
-            <h3>Thông tin sản phẩm</h3>
+            <h3 className="mb-3">Thông tin sản phẩm</h3>
             <p>
               Tên sản phẩm: <span>{productInfo.name}</span>
             </p>
@@ -52,16 +82,21 @@ export default function DetailProduct(props: DetailProductProps) {
             </p>
           </div>
           {/* des product */}
-          <div>
+          <div className="mt-4">
             <h3>Mô tả sản phẩm</h3>
-            <p>
+            {/* <p>
               {productInfo.description.replace("<p>", "").replace("</p>", "")}
-            </p>
+            </p> */}
+            <div dangerouslySetInnerHTML={createMarkup()} />
           </div>
         </div>
         {/* detail product */}
         <div className="flex-1">
-          <h2 className="text-center">{productInfo.name}</h2>
+          <div className="text-center capitalize flex justify-center">
+            <h2 className="w-fit bg-primaryColor text-[#f3eeee] px-3 py-1 rounded-lg">
+              {productInfo.name}
+            </h2>
+          </div>
           <div className="mt-4 flex justify-center gap-6 items-center">
             {/* type */}
             <div className="flex flex-col gap-2">
@@ -94,8 +129,14 @@ export default function DetailProduct(props: DetailProductProps) {
             </div>
             {/*  */}
             <div>
-              <div className="relative h-[320px] w-[320px]">
-                <Image src={currentShoe} alt="" fill object-fit="contain" />
+              <div className="relative h-[320px] w-[320px] overflow-hidden">
+                <Image
+                  src={currentShoe}
+                  alt=""
+                  fill
+                  object-fit="contain"
+                  className="hover:scale-110 duration-150 ease-linear"
+                />
               </div>
               <div className="flex justify-between items-center mt-4">
                 <p>
@@ -111,6 +152,40 @@ export default function DetailProduct(props: DetailProductProps) {
                 <div>
                   <p className="px-3 py-2 bg-[#ccc] rounded-md cursor-pointer">
                     Add to card
+                  </p>
+                </div>
+              </div>
+
+              {/* quanlity rate, comment */}
+              <div className="flex justify-center gap-4 mt-4 text-[16px] text-slate-600">
+                {/* Evaluate */}
+                <div>
+                  {productInfo.numReviews ? (
+                    <p>
+                      {productInfo.numReviews} <span>đánh giá</span>
+                    </p>
+                  ) : (
+                    <p>Chưa có đánh giá</p>
+                  )}
+                </div>
+                <div>
+                  {productInfo.numReviews ? (
+                    <p className="flex items-center gap-1">
+                      <span className="mr-2">|</span>
+                      {productInfo.numReviews - 4} <span>phản hồi</span>
+                    </p>
+                  ) : (
+                    <p>Chưa có phản hồi</p>
+                  )}
+                </div>
+                <div>
+                  <p className="flex items-center gap-1">
+                    <span className="mr-2">|</span>
+                    <StarFilled
+                      style={{ color: "#b5b51d", marginRight: "2px" }}
+                    />
+                    {productInfo.rating < 5 ? productInfo.rating : 5}{" "}
+                    <span>/5</span>
                   </p>
                 </div>
               </div>
@@ -143,6 +218,8 @@ export default function DetailProduct(props: DetailProductProps) {
           </div>
         </div>
       </div>
+      {/* recomment product */}
+      <SuggestProduct dataSuggest={dataSuggest} />
     </div>
   );
 }
@@ -164,13 +241,18 @@ export const getStaticProps: GetStaticProps = async (
   context: GetStaticPropsContext
 ) => {
   const idDetail = context.params?.productId;
-  let result;
-  if (idDetail) {
-    result = await productApi.getProductById(`${idDetail}`);
-  }
+  const { product } = await productApi.getProductById(`${idDetail}`);
+  const { data } = await productApi.getProductsType({
+    limit: 10,
+    name: product?.key,
+    page: 1,
+    sort_price: 0,
+  });
   return {
     props: {
-      productInfo: result?.product ? result?.product : {},
+      productInfo: product ? product : {},
+      dataSuggest: data,
     },
+    revalidate: 60 * 5,
   };
 };

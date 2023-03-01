@@ -3,24 +3,54 @@ import Image from "next/image";
 import * as React from "react";
 import { StarFilled, CheckCircleTwoTone } from "@ant-design/icons";
 import Link from "next/link";
+import { filterPrice } from "@/const";
+import { useRouter } from "next/router";
 
 export interface SectionContentProps {
   data: shoeProperties[];
   title: string;
+  isFillter?: boolean;
 }
 
 export function SectionContent(props: SectionContentProps) {
-  const { data, title } = props;
+  const { data, title, isFillter } = props;
+  const router = useRouter();
   return (
     <div className="shadow-card rounded-[0.5rem] p-5">
-      <div className="mb-2">
+      <div className="mb-5 flex items-center justify-between">
         <p className="text-xl font-semibold capitalize text-[#212427]">
           {title}
         </p>
+        {isFillter && (
+          <div className="flex items-center gap-2">
+            {/* <p className="cursor-pointer">Tăng</p>
+            <p className="cursor-pointer">Giảm</p> */}
+            {filterPrice.map((item, index) => {
+              return (
+                <p
+                  key={item.value}
+                  className="cursor-pointer"
+                  onClick={() => {
+                    router.push({
+                      pathname: "/product/[type]",
+                      query: {
+                        // _page: page,
+                        _sort_price: item.value,
+                        type: title,
+                      },
+                    });
+                  }}
+                >
+                  {item.title}
+                </p>
+              );
+            })}
+          </div>
+        )}
       </div>
       {/* body */}
       <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 cursor-pointer">
-        {data.map((item, index) => {
+        {data?.map((item, index) => {
           return (
             <div
               key={index}

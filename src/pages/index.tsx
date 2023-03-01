@@ -1,7 +1,7 @@
 import { productApi } from "@/api-client/product-api";
 import { MainLayout } from "@/components/layout";
 import { SectionContent } from "@/components/section-content";
-import { NextPageWithLayout, shoeProperties } from "@/types";
+import { shoeProperties } from "@/types";
 import {
   // GetServerSideProps,
   // GetServerSidePropsContext,
@@ -9,7 +9,6 @@ import {
   GetStaticPropsContext,
 } from "next";
 import Head from "next/head";
-import { useEffect } from "react";
 interface HomePageProps {
   listProduct: shoeProperties[];
   productType: shoeProperties[];
@@ -17,11 +16,7 @@ interface HomePageProps {
 }
 const HomePage = (props: HomePageProps) => {
   const { listProduct, productType, productListForYou } = props;
-  // useEffect(() => {
-  //   (async () => {
-  //     await productApi.getListProduct({ limit: 8 });
-  //   })();
-  // });
+
   return (
     <div className="pt-8 max-w-[1200px] my-0 mx-auto">
       <Head>
@@ -41,18 +36,6 @@ const HomePage = (props: HomePageProps) => {
 HomePage.Layout = MainLayout;
 export default HomePage;
 
-// export const getServerSideProps: GetServerSideProps = async (
-//   context: GetServerSidePropsContext
-// ) => {
-//   const data = await productApi.getListProduct({ limit: 8 });
-//   console.log("run", data);
-//   return {
-//     props: {
-//       listProduct: data,
-//     },
-//   };
-// };
-
 // server side run at build-time
 // dev => always when request. Prod=> run khi build
 const handleGetdata = (data: shoeProperties[]) => {
@@ -68,6 +51,7 @@ const handleGetdata = (data: shoeProperties[]) => {
     };
   });
 };
+
 export const getStaticProps = async (context: GetStaticPropsContext) => {
   const { product } = await productApi.getListProduct({ limit: 8 });
   const { data } = await productApi.getProductsType({

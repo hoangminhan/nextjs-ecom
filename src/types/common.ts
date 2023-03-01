@@ -45,6 +45,15 @@ export interface ListResponse<T> {
   limit:number
   length: number
 }
+export interface ItemResponse<T> {
+  product?: T;
+  data?:T;
+  status?:number
+  start:number
+  end:number
+  limit:number
+  length: number
+}
 export interface responseMenu {
   Adidas: any[];
   Converse: any[];
