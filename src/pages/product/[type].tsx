@@ -5,7 +5,7 @@ import { shoeProperties } from "@/types";
 import { Pagination } from "antd";
 import { GetServerSideProps, GetServerSidePropsContext } from "next";
 import { useRouter } from "next/router";
-import * as React from "react";
+import React, { useState } from "react";
 
 export interface ProductTypeProps {
   listProductType: shoeProperties[];
@@ -18,7 +18,6 @@ export interface ProductTypeProps {
 export default function ProductType(props: ProductTypeProps) {
   const { listProductType, title, totalItem, currentPage, valueSort } = props;
   const router = useRouter();
-  console.log({ listProductType, valueSort });
 
   return (
     <div className="max-w-[1200px] mx-auto mt-12">
@@ -27,6 +26,7 @@ export default function ProductType(props: ProductTypeProps) {
         data={listProductType}
         currentPage={currentPage}
         isFillter
+        // isLoading={isLoading}
       />
       {totalItem > 10 && (
         <div className="flex justify-center my-8">
@@ -34,7 +34,6 @@ export default function ProductType(props: ProductTypeProps) {
             total={totalItem}
             defaultCurrent={currentPage}
             onChange={(page, pageSize) => {
-              console.log({ router, page });
               router.push({
                 query: {
                   _page: +page,
@@ -49,11 +48,14 @@ export default function ProductType(props: ProductTypeProps) {
     </div>
   );
 }
-ProductType.Layout = MainLayout;
+ProductType.getLayout = (page: React.ReactElement) => {
+  return <MainLayout>{page}</MainLayout>;
+};
 export const getServerSideProps: GetServerSideProps = async (
   context: GetServerSidePropsContext
 ) => {
   context.res.setHeader("Cache-Control", "s-maxage=5,stale-while-revalidate=5");
+
   const { params, query } = context;
   const page = query._page || 1;
   const sort_price = query._sort_price || 0;
@@ -64,7 +66,6 @@ export const getServerSideProps: GetServerSideProps = async (
     sort_price,
     items: 10,
   });
-  console.log(data);
   return {
     props: {
       listProductType: data.data,

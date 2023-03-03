@@ -223,7 +223,9 @@ export default function DetailProduct(props: DetailProductProps) {
     </div>
   );
 }
-DetailProduct.Layout = MainLayout;
+DetailProduct.getLayout = (page: React.ReactElement) => {
+  return <MainLayout>{page}</MainLayout>;
+};
 
 export const getStaticPaths: GetStaticPaths = async () => {
   const { product } = await productApi.getListProduct({ limit: 10 });

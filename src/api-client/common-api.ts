@@ -2,7 +2,7 @@ import { responseMenu } from "@/types";
 import axiosClient from "./axios-client";
 
 export const commonApi = {
-  getMenu():Promise<responseMenu> {
+  getMenu():Promise<any> {
     const url = "menu";
     return axiosClient.get(url);
   },

@@ -1,16 +1,17 @@
 import "@/styles/globals.scss";
 import "tailwindcss/tailwind.css";
 // import "antd/dist/reset.css";
-import type { AppProps } from "next/app";
-import { AppPropsWithLayout, NextPageWithLayout } from "@/types";
-import { EmptyLayout } from "@/components/layout/empty-layout";
+import { AppPropsWithLayout } from "@/types";
+
 import { SWRConfig } from "swr";
 import axiosClient from "@/api-client/axios-client";
-import { useEffect } from "react";
+import React, { useEffect } from "react";
 import AOS from "aos";
 import "aos/dist/aos.css";
 import { ScrollToTop } from "@/components";
 import NextNProgress from "nextjs-progressbar";
+import { UseContextProvider } from "@/context";
+
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   // const getLayout = Component.getLayout ?? ((page) => page);
   // return getLayout(<Component {...pageProps} />);
@@ -23,7 +24,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
     });
   }, []);
 
-  const Layout = Component.Layout ?? EmptyLayout;
+  const getLayout = Component.getLayout ?? ((page) => page);
   return (
     <SWRConfig
       value={{
@@ -33,11 +34,11 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
         shouldRetryOnError: false,
       }}
     >
-      <Layout>
-        <Component {...pageProps} />
-        <ScrollToTop />
-        <NextNProgress />
-      </Layout>
+      <UseContextProvider>
+        {getLayout(<Component {...pageProps} />)}
+      </UseContextProvider>
+      <ScrollToTop />
+      <NextNProgress height={6} stopDelayMs={0} color="#3069fe" />
     </SWRConfig>
   );
 }

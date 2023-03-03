@@ -11,12 +11,12 @@ export interface SectionContentProps {
   title: string;
   isFillter?: boolean;
   currentPage?: number;
+  isLoading?: boolean;
 }
 
 export function SectionContent(props: SectionContentProps) {
-  const { data, title, isFillter, currentPage } = props;
+  const { data, title, isFillter, currentPage, isLoading } = props;
   const router = useRouter();
-  console.log({ router });
   return (
     <div className="shadow-card rounded-[0.5rem] p-5">
       <div className="mb-5 flex items-center justify-between">
@@ -28,8 +28,6 @@ export function SectionContent(props: SectionContentProps) {
             {/* <p className="cursor-pointer">Tăng</p>
             <p className="cursor-pointer">Giảm</p> */}
             {filterPrice.map((item, index) => {
-              console.log(Object.keys(router.query).includes("_sort_price"));
-              console.log("...", item.value === "0");
               return (
                 <p
                   key={item.value}

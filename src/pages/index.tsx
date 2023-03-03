@@ -1,6 +1,8 @@
+import { commonApi } from "@/api-client";
 import { productApi } from "@/api-client/product-api";
 import { MainLayout } from "@/components/layout";
 import { SectionContent } from "@/components/section-content";
+import { ContextCustom } from "@/context";
 import { shoeProperties } from "@/types";
 import {
   // GetServerSideProps,
@@ -9,14 +11,22 @@ import {
   GetStaticPropsContext,
 } from "next";
 import Head from "next/head";
+import React, { ReactElement, useContext, useEffect } from "react";
 interface HomePageProps {
   listProduct: shoeProperties[];
   productType: shoeProperties[];
   productListForYou: shoeProperties[];
+  listMenu: any;
 }
 const HomePage = (props: HomePageProps) => {
-  const { listProduct, productType, productListForYou } = props;
+  const { listProduct, productType, productListForYou, listMenu } = props;
+  // console.log({ listMenu });
 
+  const { setMenuList } = useContext(ContextCustom);
+  useEffect(() => {
+    sessionStorage.setItem("MenuApp", JSON.stringify(listMenu));
+    setMenuList(listMenu);
+  }, []);
   return (
     <div className="pt-8 max-w-[1200px] my-0 mx-auto">
       <Head>
@@ -33,7 +43,9 @@ const HomePage = (props: HomePageProps) => {
   );
 };
 
-HomePage.Layout = MainLayout;
+HomePage.getLayout = (page: ReactElement) => {
+  return <MainLayout>{page}</MainLayout>;
+};
 export default HomePage;
 
 // server side run at build-time
@@ -66,6 +78,8 @@ export const getStaticProps = async (context: GetStaticPropsContext) => {
     page: 1,
     sort_price: 0,
   });
+  const result = await commonApi.getMenu();
+
   return {
     props: {
       listProduct: Array.isArray(product) ? handleGetdata(product) : [],
@@ -73,6 +87,7 @@ export const getStaticProps = async (context: GetStaticPropsContext) => {
       productListForYou: Array.isArray(productForYou)
         ? handleGetdata(productForYou)
         : [],
+      listMenu: result,
     },
   };
 };

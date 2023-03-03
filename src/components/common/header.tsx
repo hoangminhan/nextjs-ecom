@@ -7,6 +7,7 @@ import { MenuHeader } from "../menu";
 export interface IHeaderAppProps {}
 
 export function HeaderApp(props: IHeaderAppProps) {
+  console.log("menuheader");
   return (
     <div className="fixed top-0 left-0 right-0 h-[72px] z-[5] border-b bg-white px-4 py-2 shadow-md">
       <div className="h-full flex items-center justify-between">

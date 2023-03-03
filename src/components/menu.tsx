@@ -1,7 +1,8 @@
-import { Menu, MenuProps } from "antd";
+import { ContextCustom } from "@/context";
+import { Menu, MenuProps, Skeleton } from "antd";
 import Link from "next/link";
 import { useRouter } from "next/router";
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import useSWR from "swr";
 
@@ -56,24 +57,38 @@ const handleGetItemMenu = (listMenu: Record<string, unknown>) => {
 };
 
 export function MenuHeader() {
-  const [currentItemMenu, setCurrentItemMenu] = useState<string>("Home");
   const router = useRouter();
-  const { data, error, mutate } = useSWR("/menu", {
-    revalidateOnFocus: false,
-    /* The time in milliseconds that the request will be cached. */
-    dedupingInterval: 60 * 60 * 1000,
-  });
-  if (!data || error) return null;
-  const menuList: propertiesMenu[] = handleGetItemMenu(data);
+  console.log("router", router);
+  const [currentItemMenu, setCurrentItemMenu] = useState<any>(
+    router?.query?.type || "Home"
+  );
+
+  // const { data, error, mutate } = useSWR("/menu", {
+  //   revalidateOnFocus: false,
+  //   /* The time in milliseconds that the request will be cached. */
+  //   dedupingInterval: 60 * 60 * 1000,
+  // });
+  const { menuList: menuListNew } = useContext(ContextCustom);
+  if (!Object.keys(menuListNew).length)
+    return (
+      <Skeleton
+        title={{ width: "100%" }}
+        paragraph={{ width: "100%", rows: 1 }}
+        active
+      />
+    );
+  const menuList: propertiesMenu[] = handleGetItemMenu(menuListNew);
   const items: MenuProps["items"] = menuList;
-  const onClick: MenuProps["onClick"] = (e) => {
-    setCurrentItemMenu(e.key);
-    if (e.key === "Home") {
+  const onClick: MenuProps["onClick"] = (itemMenu) => {
+    console.log({ itemMenu });
+    setCurrentItemMenu(itemMenu.key);
+    if (itemMenu.key === "Home") {
       router.push(`/`);
     } else {
-      router.push(`/product/${e.key}`);
+      router.push(`/product/${itemMenu.key}`);
     }
   };
+  console.log({ currentItemMenu });
   return (
     <nav className="h-full">
       {Array.isArray(items) && (
