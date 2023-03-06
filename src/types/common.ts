@@ -66,4 +66,6 @@ export interface responseMenu {
 export interface MyContextType {
   menuList:any,
   setMenuList:(props:any)=>void
+  currentModal:any,
+  setCurrentModal:(props:any)=>void
 }

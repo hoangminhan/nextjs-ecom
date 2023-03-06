@@ -13,6 +13,9 @@ module.exports = {
       colors: {
         primaryColor: "#1677FF",
       },
+      fontFamily: {
+        sans: ['"Open Sans"', "sans-serif"],
+      },
     },
   },
   plugins: [],

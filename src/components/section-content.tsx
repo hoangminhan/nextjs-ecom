@@ -1,10 +1,12 @@
 import { shoeProperties } from "@/types";
 import Image from "next/image";
 import * as React from "react";
-import { StarFilled, CheckCircleTwoTone } from "@ant-design/icons";
+import { StarFilled } from "@ant-design/icons";
 import Link from "next/link";
 import { filterPrice } from "@/const";
 import { useRouter } from "next/router";
+import ModalApp from "@/modal-app";
+import { Modal } from "antd";
 
 export interface SectionContentProps {
   data: shoeProperties[];
@@ -12,11 +14,15 @@ export interface SectionContentProps {
   isFillter?: boolean;
   currentPage?: number;
   isLoading?: boolean;
+  isLoadMore?: boolean;
 }
 
 export function SectionContent(props: SectionContentProps) {
-  const { data, title, isFillter, currentPage, isLoading } = props;
+  const { data, title, isFillter, currentPage, isLoadMore } = props;
+  const [quantityProduct, setQuantityProduct] = React.useState(10);
   const router = useRouter();
+
+  console.log({ quantityProduct });
   return (
     <div className="shadow-card rounded-[0.5rem] p-5">
       <div className="mb-5 flex items-center justify-between">
@@ -64,7 +70,9 @@ export function SectionContent(props: SectionContentProps) {
           return (
             <div
               key={index}
-              className="rounded-md border border-solid border-[#e8dfec] p-4"
+              className={`rounded-md border border-solid border-[#e8dfec] p-4 ${
+                index <= quantityProduct ? "block" : "hidden"
+              }`}
               data-aos="zoom-in"
             >
               <Link href={`/detail/${item._id}`}>
@@ -136,6 +144,19 @@ export function SectionContent(props: SectionContentProps) {
           );
         })}
       </div>
+      {/* load more */}
+      {isLoadMore && (
+        <div className="mt-9 flex justify-center">
+          <p
+            className="px-3 py-1 bg-primaryColor text-white rounded-md cursor-pointer duration-150 hover:scale-105 ease-in-out"
+            onClick={() => {
+              setQuantityProduct((pre) => (pre <= 10 ? pre + 10 : pre - 10));
+            }}
+          >
+            {quantityProduct <= 10 ? "Show more" : "Show less"}
+          </p>
+        </div>
+      )}
     </div>
   );
 }

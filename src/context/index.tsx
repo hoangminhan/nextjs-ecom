@@ -8,9 +8,12 @@ interface contextProps {
 export const ContextCustom = createContext<MyContextType>({
   menuList: [],
   setMenuList: function (props: any): void {},
+  currentModal: [],
+  setCurrentModal: function (props: any): void {},
 });
 export const UseContextProvider = ({ children }: contextProps) => {
   const [menuList, setMenuList] = useState({});
+  const [currentModal, setCurrentModal] = useState("modal-type-product");
   useEffect(() => {
     const menu = sessionStorage.getItem("MenuApp");
     if (menu) {
@@ -22,6 +25,8 @@ export const UseContextProvider = ({ children }: contextProps) => {
       value={{
         menuList,
         setMenuList,
+        currentModal,
+        setCurrentModal,
       }}
     >
       {children}

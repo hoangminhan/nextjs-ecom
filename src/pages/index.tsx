@@ -28,7 +28,7 @@ const HomePage = (props: HomePageProps) => {
     setMenuList(listMenu);
   }, []);
   return (
-    <div className="pt-8 max-w-[1200px] my-0 mx-auto">
+    <div className="pt-8 max-w-[1200px] my-0 mx-auto font-sans">
       <Head>
         <title>HAShoes</title>
       </Head>

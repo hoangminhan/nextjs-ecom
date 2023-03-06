@@ -11,6 +11,7 @@ import "aos/dist/aos.css";
 import { ScrollToTop } from "@/components";
 import NextNProgress from "nextjs-progressbar";
 import { UseContextProvider } from "@/context";
+import ModalApp from "@/modal-app";
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   // const getLayout = Component.getLayout ?? ((page) => page);

@@ -5,5 +5,5 @@ export interface IEmptyLayoutProps {}
 
 export function EmptyLayout(props: LayoutProps) {
   const { children } = props;
-  return <div>{children}</div>;
+  return <div className="font-sans">{children}</div>;
 }

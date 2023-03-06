@@ -51,12 +51,21 @@ export default function DetailProduct(props: DetailProductProps) {
             </Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
-            <Link
-              href={`/product/${productInfo.NSX.replace(" ", "-")}`}
-              passHref
+            <div
+              onClick={() => {
+                router.push({
+                  pathname: `/trademark/${productInfo.key}`,
+                  query: {
+                    limit: 10,
+                    _page: 1,
+                  },
+                });
+              }}
             >
+              {/* href={`/trademark/${productInfo.key}?_page=1&limit=10`}
+               passHref  */}
               <p className="capitalize">{productInfo.key}</p>
-            </Link>
+            </div>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
             <p className="capitalize">{productInfo.name}</p>

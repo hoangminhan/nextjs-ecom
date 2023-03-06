@@ -1,14 +1,7 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   images: {
-    remotePatterns: [
-      {
-        protocol: "http",
-        hostname: "res.cloudinary.com",
-        port: "",
-        pathname: "/phuockaito/image/upload/**",
-      },
-    ],
+    domains: ["res.cloudinary.com", "lh3.googleusercontent.com"],
   },
   reactStrictMode: true,
   publicRuntimeConfig: {

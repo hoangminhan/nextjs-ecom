@@ -58,7 +58,6 @@ const handleGetItemMenu = (listMenu: Record<string, unknown>) => {
 
 export function MenuHeader() {
   const router = useRouter();
-  console.log("router", router);
   const [currentItemMenu, setCurrentItemMenu] = useState<any>(
     router?.query?.type || "Home"
   );
@@ -80,7 +79,6 @@ export function MenuHeader() {
   const menuList: propertiesMenu[] = handleGetItemMenu(menuListNew);
   const items: MenuProps["items"] = menuList;
   const onClick: MenuProps["onClick"] = (itemMenu) => {
-    console.log({ itemMenu });
     setCurrentItemMenu(itemMenu.key);
     if (itemMenu.key === "Home") {
       router.push(`/`);
@@ -88,7 +86,6 @@ export function MenuHeader() {
       router.push(`/product/${itemMenu.key}`);
     }
   };
-  console.log({ currentItemMenu });
   return (
     <nav className="h-full">
       {Array.isArray(items) && (
