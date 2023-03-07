@@ -26,6 +26,7 @@ export default function ProductType(props: ProductTypeProps) {
         data={listProductType}
         currentPage={currentPage}
         isFillter
+        destinationPath="type"
         // isLoading={isLoading}
       />
       {totalItem > 10 && (

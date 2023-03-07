@@ -5,8 +5,6 @@ import { StarFilled } from "@ant-design/icons";
 import Link from "next/link";
 import { filterPrice } from "@/const";
 import { useRouter } from "next/router";
-import ModalApp from "@/modal-app";
-import { Modal } from "antd";
 
 export interface SectionContentProps {
   data: shoeProperties[];
@@ -15,14 +13,21 @@ export interface SectionContentProps {
   currentPage?: number;
   isLoading?: boolean;
   isLoadMore?: boolean;
+  destinationPath?: string;
 }
 
 export function SectionContent(props: SectionContentProps) {
-  const { data, title, isFillter, currentPage, isLoadMore } = props;
+  const {
+    data,
+    title,
+    isFillter,
+    currentPage,
+    isLoadMore,
+    destinationPath,
+  } = props;
   const [quantityProduct, setQuantityProduct] = React.useState(10);
   const router = useRouter();
 
-  console.log({ quantityProduct });
   return (
     <div className="shadow-card rounded-[0.5rem] p-5">
       <div className="mb-5 flex items-center justify-between">
@@ -48,11 +53,11 @@ export function SectionContent(props: SectionContentProps) {
                   `}
                   onClick={() => {
                     router.push({
-                      // pathname: "/product/[type]",
+                      pathname: router.pathname,
                       query: {
                         _page: currentPage,
                         _sort_price: item.value,
-                        type: title.replaceAll(" ", "-"),
+                        [`${destinationPath}`]: title.replaceAll(" ", "-"),
                       },
                     });
                   }}
@@ -150,7 +155,13 @@ export function SectionContent(props: SectionContentProps) {
           <p
             className="px-3 py-1 bg-primaryColor text-white rounded-md cursor-pointer duration-150 hover:scale-105 ease-in-out"
             onClick={() => {
-              setQuantityProduct((pre) => (pre <= 10 ? pre + 10 : pre - 10));
+              router.push({
+                pathname: router.pathname,
+                query: {
+                  ...router.query,
+                  items: Number(router.query.items) <= 10 ? 20 : 10,
+                },
+              });
             }}
           >
             {quantityProduct <= 10 ? "Show more" : "Show less"}

@@ -20,7 +20,6 @@ interface HomePageProps {
 }
 const HomePage = (props: HomePageProps) => {
   const { listProduct, productType, productListForYou, listMenu } = props;
-  // console.log({ listMenu });
 
   const { setMenuList } = useContext(ContextCustom);
   useEffect(() => {

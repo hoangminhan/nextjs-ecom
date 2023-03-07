@@ -30,3 +30,16 @@ p {
   box-shadow: 0 3px 6px -4px rgb(0 0 0 / 12%), 0 6px 16px 0 rgb(0 0 0 / 8%),
     0 9px 28px 8px rgb(0 0 0 / 5%);
 }
+.form-style {
+  border-radius: 14px;
+  border: 1px solid;
+  border-image-source: linear-gradient(
+    to bottom,
+    #ffffff,
+    rgba(219, 230, 242, 0),
+    #8f9fae
+  );
+  box-shadow: 4px 20px 48px 0 rgb(18 61 101 / 14%),
+    inset -4px -3px 40px 0 rgb(255 255 255 / 18%);
+  background-image: linear-gradient(to top right, #d4e2f2, #ebf2f9);
+}

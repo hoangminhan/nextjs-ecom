@@ -6,9 +6,7 @@ const { publicRuntimeConfig } = getConfig();
 const hasWindow = () => typeof window === "object";
 const axiosClient = axios.create({
   // baseURL:"https://www.kaitoshop.tk/api/",
-  // baseURL:"/api",
   baseURL: hasWindow() ? "/api/" : publicRuntimeConfig.API_URL + "/api/",
-  // timeout: 10000,
   headers: {
     "Content-Type": "application/json",
   },

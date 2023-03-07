@@ -47,28 +47,32 @@ export default function DetailProduct(props: DetailProductProps) {
         <Breadcrumb>
           <Breadcrumb.Item>
             <Link href={"/"} legacyBehavior>
-              <a>Home</a>
+              <a className="text-[16px]">Home</a>
             </Link>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
-            <div
+            {/* href={`/trademark/${productInfo.key}?_page=1&limit=10`}
+               passHref  */}
+            <span
+              className="cursor-pointer capitalize hover:bg-[#0000000f] text-[16px]"
               onClick={() => {
                 router.push({
-                  pathname: `/trademark/${productInfo.key}`,
+                  pathname: "/trademark/[trademarktype]",
                   query: {
+                    trademarktype: productInfo.key,
                     limit: 10,
                     _page: 1,
                   },
                 });
               }}
             >
-              {/* href={`/trademark/${productInfo.key}?_page=1&limit=10`}
-               passHref  */}
-              <p className="capitalize">{productInfo.key}</p>
-            </div>
+              {productInfo.key}
+            </span>
           </Breadcrumb.Item>
           <Breadcrumb.Item>
-            <p className="capitalize">{productInfo.name}</p>
+            <p className="capitalize font-medium text-[16px]">
+              {productInfo.name}
+            </p>
           </Breadcrumb.Item>
         </Breadcrumb>
       </div>
