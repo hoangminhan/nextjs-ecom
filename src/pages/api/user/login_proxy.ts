@@ -19,21 +19,22 @@ export default function handler(
   }
   return new Promise((resolve) => {
     req.headers.cookie = "";
-    // req.url = req.url ? req.url.replace(/^\/api/, "") : req.url;
+    req.url = req.url ? req.url.replace(/^\/api/, "") : req.url;
 
     const handleLoginResponse: ProxyResCallback = (proxyRes, req, res) => {
-      let body:any;
-      proxyRes.on("data", (chunk) => {
-        console.log("chunk",chunk)
-        return body += chunk
+      console.log("@@@",proxyRes)
+      let body :Buffer[] = [];
+      proxyRes.on("data", function (chunk:Buffer) {
+        console.log("c",chunk);
+        body.push(chunk);
       });
-
       //   done
-      proxyRes.on("end", async () => {
+      proxyRes.on("end", function () {
         try {
-          console.log("body",body );
-          const {  expiredAt } = JSON.parse(body);
-          const accessToken ="312312"
+          const data = Buffer.concat(body).toString();
+          console.log("body", data);
+          // const { token: accessToken } = JSON.parse(body);
+          const accessToken = "123123ss";
 
           //   convert token to cookies
           const cookies = new Cookies(req, res, {
@@ -42,18 +43,22 @@ export default function handler(
           cookies.set("accessToken", accessToken, {
             httpOnly: true,
             sameSite: "lax",
-            expires: new Date(expiredAt),
           });
           (res as NextApiResponse)
             .status(200)
             .json({ message: "Login success" });
+          resolve(true);
         } catch (error) {
-          console.log("eror",error);
+          console.log("erorr", error);
           (res as NextApiResponse)
             .status(500)
             .json({ message: "Someting went wrong" });
+          resolve(false);
         }
-        resolve(true);
+      });
+      proxy.on("error", () => {
+        console.log("error");
+        resolve(false);
       });
     };
 
@@ -62,7 +67,8 @@ export default function handler(
 
     /* A proxy server that is used to proxy the request to the target server. */
     proxy.web(req, res, {
-      target: "https://www.kaitoshop.tk/",
+      // target: "https://corebe-cloud-staging.solarbk.vn/",
+      target:process.env.API_URL,
       /* Telling the proxy to handle the response. */
       selfHandleResponse: true,
       changeOrigin: true,

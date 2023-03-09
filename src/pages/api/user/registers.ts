@@ -10,53 +10,60 @@ export const config = {
 
 const proxy = httpProxy.createProxyServer();
 
+
 export default function handler(
   req: NextApiRequest,
   res: NextApiResponse<any>
 ) {
-  if (req.method !== "POST")
+  if (req.method !== "POST") {
     return res.status(404).json({ message: "method not supported" });
+  }
   return new Promise((resolve) => {
     req.headers.cookie = "";
-    const handleLoginResponse: ProxyResCallback = (proxyRes, req, res) => {
+    const handleRegisterResponse: ProxyResCallback = (proxyRes, req, res) => {
       let body = "";
-      proxyRes.on("data", (chunk) => (body += chunk));
-      proxyRes.on("end", async () => {
+      proxyRes.on("data", (chunk) => {
+        console.log("first", chunk);
+        body += chunk;
+      });
+      proxyRes.on("end", function () {
         try {
-          const { message } = JSON.parse(body);
-          console.log("message",message)
-          const accessToken ="123adadasd"
+          console.log("body", body);
+          const { accessToken, message } = JSON.parse(body);
+          console.log(",,,", JSON.parse(body));
+          if (!accessToken) {
+            return (res as NextApiResponse)
+              .status(400)
+              .json({ message: message });
+          }
+          console.log("run");
 
-          // if (!accessToken) {
-          //   (res as NextApiResponse).status(400).json({ message });
-          // } 
-            console.log("k co");
-
-            const cookies = new Cookies(req, res, {
-              /* Checking if the environment is not in development mode, then it will set the cookie to be
+          const cookies = new Cookies(req, res, {
+            /* Checking if the environment is not in development mode, then it will set the cookie to be
               secure. */
-              secure: process.env.NODE_ENV !== "development",
-            });
-            cookies.set("access_token", accessToken, {
-              httpOnly: true,
-              /* A security feature that prevents CSRF attacks. */
-              sameSite: "lax",
-            });
-            (res as NextApiResponse).status(200).json({
-              message: "register successful",
-            });
+            secure: process.env.NODE_ENV !== "development",
+          });
+          cookies.set("access_token", accessToken, {
+            httpOnly: true,
+            /* A security feature that prevents CSRF attacks. */
+            sameSite: "lax",
+          });
+          (res as NextApiResponse).status(200).json({
+            message: "register success",
+          });
+          resolve(true);
         } catch (error) {
           console.log(error);
           (res as NextApiResponse)
             .status(500)
             .json({ message: "something went wrong" });
+          resolve(false);
         }
-        resolve(true);
       });
     };
-    proxy.once("proxyRes", handleLoginResponse);
+    proxy.once("proxyRes", handleRegisterResponse);
     proxy.web(req, res, {
-      target: process.env.API_URL,
+      target: "https://www.kaitoshop.tk/",
       changeOrigin: true,
       selfHandleResponse: true,
     });

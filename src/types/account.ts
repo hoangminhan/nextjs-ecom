@@ -1,4 +1,7 @@
 export interface userInfo {
-    username:string,
-    password:string
+    email:string,
+    password:string,
+    confirm_password?:string,
+    name?:string
+
 }

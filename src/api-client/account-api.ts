@@ -15,6 +15,7 @@ export const apiAccount = {
         return axiosClient.post(url);
     },
     register: (dataBody:userInfo) => {
+        console.log(dataBody)
         const url = "user/registers";
         return axiosClient.post(url, dataBody);
     },

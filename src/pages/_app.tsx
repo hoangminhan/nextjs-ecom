@@ -1,17 +1,14 @@
 import "@/styles/globals.scss";
-import "tailwindcss/tailwind.css";
-// import "antd/dist/reset.css";
 import { AppPropsWithLayout } from "@/types";
-
-import { SWRConfig } from "swr";
+import "tailwindcss/tailwind.css";
 import axiosClient from "@/api-client/axios-client";
-import React, { useEffect } from "react";
+import { ScrollToTop } from "@/components";
+import { UseContextProvider } from "@/context";
 import AOS from "aos";
 import "aos/dist/aos.css";
-import { ScrollToTop } from "@/components";
 import NextNProgress from "nextjs-progressbar";
-import { UseContextProvider } from "@/context";
-import ModalApp from "@/modal-app";
+import { useEffect } from "react";
+import { SWRConfig } from "swr";
 
 export default function App({ Component, pageProps }: AppPropsWithLayout) {
   // const getLayout = Component.getLayout ?? ((page) => page);

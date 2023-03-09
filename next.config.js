@@ -5,7 +5,7 @@ const nextConfig = {
   },
   reactStrictMode: true,
   publicRuntimeConfig: {
-    API_URL: process.env.API_URL,
+    API_URL: "https://www.kaitoshop.tk/",
   },
 };
 

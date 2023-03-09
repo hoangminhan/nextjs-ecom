@@ -6,7 +6,8 @@ const { publicRuntimeConfig } = getConfig();
 const hasWindow = () => typeof window === "object";
 const axiosClient = axios.create({
   // baseURL:"https://www.kaitoshop.tk/api/",
-  baseURL: hasWindow() ? "/api/" : publicRuntimeConfig.API_URL + "/api/",
+  // baseURL: hasWindow() ? "/api/" : "https://www.kaitoshop.tk/" + "/api/",
+  baseURL: "/api/",
   headers: {
     "Content-Type": "application/json",
   },
@@ -27,7 +28,8 @@ axiosClient.interceptors.response.use(
   function (response) {
     // Any status code that lie within the range of 2xx cause this function to trigger
     // Do something with response data
-    return response.data;
+    console.log({response})
+    return response;
   },
   function (error) {
     // Any status codes that falls outside the range of 2xx cause this function to trigger
